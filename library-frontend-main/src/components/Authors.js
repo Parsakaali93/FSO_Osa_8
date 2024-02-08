@@ -1,4 +1,4 @@
-import { ALL_AUTHORS, EDIT_BIRTHYEAR } from "../queries"
+import { ALL_AUTHORS, EDIT_BIRTHYEAR, ME } from "../queries"
 import { useQuery, useMutation } from "@apollo/client"
 import { useState } from "react";
 
@@ -29,6 +29,7 @@ const Authors = (props) => {
     return <p>loading</p>
   }
 
+  console.log(result)
   const authors = result.data.allAuthors
 
   const submitEditBirthyear = async (e) => {
@@ -42,6 +43,8 @@ const Authors = (props) => {
     // Clear the input fields
     setBorn('');
   }
+
+
 
   return (
     <div>

@@ -1,15 +1,18 @@
 import { ALL_BOOKS } from "../queries"
 import { useQuery } from "@apollo/client"
 import { useState } from "react";
-const Books = (props) => {
-  const [selectedGenre, setSelectedGenre] = useState(null);
+const Recommended = ({favoriteGenre, show}) => {
+  const [selectedGenre, setSelectedGenre] = useState(null)
+    
 
+  console.log("fave genre", favoriteGenre)
   const result = useQuery(ALL_BOOKS, {
+    variables: {genre: favoriteGenre},
     pollInterval: 2000,
-    skip:!props.show
+    skip:!show
   })
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
@@ -31,13 +34,8 @@ const Books = (props) => {
   console.log(allGenres)
   return (
     <div>
-      <h2>books</h2>
+      <h2>Recommended for you:</h2>
 
-      <div className="filterDiv" style={{marginTop: 30, marginBottom: 30}}>
-      <h5 style={{marginBottom: 6}}>Filters</h5>
-      {allGenres.map((genre) => <button key={genre} onClick={() => handleGenreClick(genre)} style={{margin: '5px', backgroundColor: isGenreSelected(genre) ? 'lightblue' : 'initial'
-          }}>{genre}</button>)}
-      </div>
       <table>
         <tbody>
           <tr>
@@ -46,7 +44,7 @@ const Books = (props) => {
             <th>published</th>
           </tr>
           {books.map((a) => (
-            (!selectedGenre || a.genres.includes(selectedGenre)) &&
+            (a.genres.includes(favoriteGenre)) &&
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
@@ -59,4 +57,4 @@ const Books = (props) => {
   )
 }
 
-export default Books
+export default Recommended

@@ -16,6 +16,7 @@ const NewBook = (props) => {
         refetchQueries: [ { query: ALL_BOOKS } ],
         onError: (error) => {
             const messages = error.graphQLErrors.map(e => e.message).join('\n')
+            console.log(messages)
         }
     })
 
