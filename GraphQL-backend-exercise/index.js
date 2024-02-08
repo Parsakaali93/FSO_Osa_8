@@ -185,16 +185,15 @@ const resolvers = {
             // console.log("all books", args)
             let filteredBooks = await Book.find({}).populate('author')
             
-             console.log(filteredBooks, args)
+            console.log("books args", root)
 
-            
-            return filteredBooks
             if(args.author)
                 filteredBooks = filteredBooks.filter((book) => book.author.name === args.author)
 
             if(args.genre)
                 filteredBooks = filteredBooks.filter((book) => book.genres.includes(args.genre))
 
+            return filteredBooks
             
     },
 
@@ -203,6 +202,10 @@ const resolvers = {
         console.log(authors)
         return authors
         // return authors.map( (author) => ({...author, bookCount:books.filter(book => book.author === author.name).length}) )
+    },
+
+    me: (root, args, context) => {
+      return context.currentUser
     }
   },
 
@@ -327,6 +330,15 @@ const resolvers = {
     },
 
     editAuthor: async (root, args, context) => {
+      if(!context.currentUser)
+      {
+        throw new GraphQLError('User not logged in or token expired', {
+            extensions: {
+                code: 'BAD_USER_INPUT',
+            }
+      })
+      }
+      
         const updatedAuthor = await Author.findOneAndUpdate({name: args.name}, {born: args.setBornTo}, {new: true})
 
         if (!updatedAuthor) {
